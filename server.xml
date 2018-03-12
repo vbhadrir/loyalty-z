@@ -1,0 +1,32 @@
+<server description="loyalty">
+
+    <!-- Enable features -->
+    <featureManager>
+        <feature>microProfile-1.0</feature>
+        <feature>jndi-1.0</feature>
+        <feature>jca-1.7</feature>
+        <feature>jms-2.0</feature>
+        <feature>wmqJmsClient-2.0</feature>
+    </featureManager>
+
+    <!-- To access this server from a remote client add a host attribute to the following element, e.g. host="*" -->
+    <httpEndpoint httpPort="9082" httpsPort="9445" host="*" id="defaultHttpEndpoint"/>
+                  
+    <!-- Automatically expand WAR files and EAR files -->
+    <applicationManager autoExpand="true"/>
+    
+    <variable name="wmqJmsClient.rar.location" value="/config/wmq.jmsra.rar"/>
+    <jmsQueueConnectionFactory id="NotificationQCF" jndiName="jms/NotificationQueueConnectionFactory">
+        <properties.wmqJms channel="SYSTEM.DEF.SVRCONN" hostName="192.168.0.22" port="1414" queueManager="CSQ1" transportType="CLIENT"/>
+    </jmsQueueConnectionFactory>
+    <jmsQueue id="NotificationQ" jndiName="jms/NotificationQueue">
+        <properties.wmqJms baseQueueManagerName="CSQ1" baseQueueName="NotificationQ"/>
+    </jmsQueue>
+    
+
+
+    <applicationMonitor updateTrigger="mbean"/>
+
+    <webApplication id="LoyaltyLevel" location="LoyaltyLevel.war" name="LoyaltyLevel" contextRoot="/loyalty"/>
+</server>
+
